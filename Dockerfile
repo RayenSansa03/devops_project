@@ -1,11 +1,13 @@
-FROM eclipse-temurin:17-jdk-jammy
-
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
-# On copie le JAR correct (pas le .original)
-COPY target/student-management-0.0.1-SNAPSHOT.jar app.jar
+# Copie n'importe quel JAR généré par Spring Boot (même si le nom change)
+COPY target/*.jar app.jar
 
-# Ton Spring Boot écoute sur 8089
 EXPOSE 8089
+
+# Sécurité : utilisateur non-root
+RUN addgroup --system spring && adduser --system --group spring
+USER spring
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
